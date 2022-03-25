@@ -21,7 +21,7 @@ from reversi import (
 )
 from tournament import StudentHeuristic, Tournament
 
-
+heuristics_file = __import__("2391_p2_05_orofino_piasecki")
 class Heuristic1(StudentHeuristic):
 
     def get_name(self) -> str:
@@ -100,17 +100,28 @@ def create_match(player1: Player, player2: Player) -> TwoPlayerMatch:
 
     return TwoPlayerMatch(game_state, max_seconds_per_move=1000, gui=False)
 
-simple_evaluation_function.counter = 0
-count_both_pieces_possible_catches.counter = 0
-count_pieces.counter = 0
+#simple_evaluation_function.counter = 0
+#heuristics_file.Solution1.evaluation_function.counter = 0
+#heuristics_file.Solution2.evaluation_function.counter = 0
+#heuristics_file.Solution3.evaluation_function.counter = 0
+
+
 start = time.time()
 tour = Tournament(max_depth=3, init_match=create_match)
-#strats = {'opt1': [Heuristic1], 'opt2': [Heuristic1]}
-strats = {'opt1': [Heuristic3], 'opt2': [Heuristic3]}
+
+# different strats to compare statistics with and without pruning
+#strats = {'opt1': [Heuristic3], 'opt2': [Heuristic3]}
+#strats = {'opt1': [heuristics_file.Solution1], 'opt2': [heuristics_file.Solution1]}
+#strats = {'opt1': [heuristics_file.Solution2], 'opt2': [heuristics_file.Solution2]}
+strats = {'opt1': [heuristics_file.Solution3], 'opt2': [heuristics_file.Solution3]}
+
+
+
+
 n = 1
 scores, totals, names = tour.run(
     student_strategies=strats,
-    increasing_depth=False,
+    increasing_depth=True,
     n_pairs=1,
     allow_selfmatch=False,
 )
@@ -136,7 +147,5 @@ for name1 in names:
             print('\t%d' % (scores[name1][name2]), end='')
     print()
 
-print(f'Time needed to perform tournament with pruning: {elapsed}')
-#print(f'Number of simple function execution {simple_evaluation_function.counter}')
-#print(f'Number of simple function execution {count_both_pieces_possible_catches.counter}')
-print(f'Number of simple function execution {count_pieces.counter}')
+print(f'Time needed to perform tournament without pruning: {elapsed}')
+print(f'Number of simple function execution {StudentHeuristic.evaluation_function.counter}')

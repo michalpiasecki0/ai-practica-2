@@ -66,7 +66,6 @@ def simple_evaluation_function(state: TwoPlayerGameState) -> float:
 
 def count_pieces(state: TwoPlayerGameState) -> float:
     "Return difference between white points and black points"
-    count_pieces.counter += 1
     scores = state.scores
 
     # Evaluation of the state from the point of view of MAX
