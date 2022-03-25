@@ -47,7 +47,7 @@ class Heuristic(object):
 def simple_evaluation_function(state: TwoPlayerGameState) -> float:
     """Return a random value, except for terminal game states."""
     state_value = 2*np.random.rand() - 1
-
+    simple_evaluation_function.counter += 1
     if state.end_of_game:
         scores = state.scores
         # Evaluation of the state from the point of view of MAX
@@ -66,6 +66,7 @@ def simple_evaluation_function(state: TwoPlayerGameState) -> float:
 
 def count_pieces(state: TwoPlayerGameState) -> float:
     "Return difference between white points and black points"
+    count_pieces.counter += 1
     scores = state.scores
 
     # Evaluation of the state from the point of view of MAX
@@ -89,7 +90,7 @@ def count_both_pieces_possible_catches(state: TwoPlayerGameState) -> float:
     :return: value of heuristic for a given state
     """
 
-
+    count_both_pieces_possible_catches.counter += 1
     scores = state.scores
     current_board = state.board
     player_sign = state.next_player.name

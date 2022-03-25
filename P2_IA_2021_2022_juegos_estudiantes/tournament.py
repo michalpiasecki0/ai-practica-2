@@ -105,25 +105,26 @@ class Tournament(object):
                 name2 = student2 + "_" + sh2.get_name()
                 name_mapping[name2] = sh2.get_name()
                 if increasing_depth:
-                    for depth in range(1, self.__max_depth):
-                        pl1 = Player(
-                            name=name1,
-                            strategy=MinimaxAlphaBetaStrategy(
-                                heuristic=Heuristic(name=sh1.get_name(), evaluation_function=sh1.evaluation_function),
-                                max_depth_minimax=depth,
-                                verbose=0,
-                            ),
-                        )
-                        pl2 = Player(
-                            name=name2,
-                            strategy=MinimaxAlphaBetaStrategy(
-                                heuristic=Heuristic(name=sh2.get_name(), evaluation_function=sh2.evaluation_function),
-                                max_depth_minimax=depth,
-                                verbose=0,
-                            ),
-                        )
+                    # i changed this line of code to get the same number of games for minimax and minimaxalphabeta
+                    depth = self.__max_depth
+                    pl1 = Player(
+                        name=name1,
+                        strategy=MinimaxAlphaBetaStrategy(
+                            heuristic=Heuristic(name=sh1.get_name(), evaluation_function=sh1.evaluation_function),
+                            max_depth_minimax=depth,
+                            verbose=0,
+                        ),
+                    )
+                    pl2 = Player(
+                        name=name2,
+                        strategy=MinimaxAlphaBetaStrategy(
+                            heuristic=Heuristic(name=sh2.get_name(), evaluation_function=sh2.evaluation_function),
+                            max_depth_minimax=depth,
+                            verbose=0,
+                        ),
+                    )
 
-                        self.__single_run(player1_first, pl1, name1, pl2, name2, scores, totals)
+                    self.__single_run(player1_first, pl1, name1, pl2, name2, scores, totals)
                 else:
                     depth=self.__max_depth
                     pl1 = Player(

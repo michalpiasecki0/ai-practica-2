@@ -13,6 +13,9 @@ from strategy import (ManualStrategy, MinimaxAlphaBetaStrategy,
 import time
 ### Define players
 
+player1_manual = Player(name="Manual_1", strategy=ManualStrategy(verbose=3))
+player2_manual = Player(name="Manual_1", strategy=ManualStrategy(verbose=3))
+
 player1_minimax = Player(
     name='Minimax 1',
     strategy=MinimaxStrategy(
@@ -51,7 +54,7 @@ player2_minimax_alpha_beta = Player(
 )
 
 ### Select players
-
+#player1,  player2 = player1_manual, player2_manual
 #player1, player2 = player1_minimax, player2_minimax
 player1, player2 = player1_minimax_alpha_beta, player2_minimax_alpha_beta
 
@@ -83,4 +86,4 @@ match = TwoPlayerMatch(
 t = time.time()
 score = match.play_match()
 elapsed = time.time() - t
-print(elapsed)
+#print(elapsed)

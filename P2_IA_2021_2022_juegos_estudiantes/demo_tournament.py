@@ -7,10 +7,13 @@ Authors:
 
 from __future__ import annotations  # For Python 3.7
 
+import time
+import timeit
+
 import numpy as np
 
 from game import Player, TwoPlayerGameState, TwoPlayerMatch
-from heuristic import simple_evaluation_function, count_all, do_second_version
+from heuristic import simple_evaluation_function, count_pieces, count_both_pieces_possible_catches
 from reversi import (
     Reversi,
     from_array_to_dictionary_board,
@@ -22,11 +25,11 @@ from tournament import StudentHeuristic, Tournament
 class Heuristic1(StudentHeuristic):
 
     def get_name(self) -> str:
-        return "count_both_all_and_"
+        return "player"
 
     def evaluation_function(self, state: TwoPlayerGameState) -> float:
         # Use an auxiliary function.
-        return do_second_version(state)
+        return count_pieces(state)
 
     def dummy(self, n: int) -> int:
         return n + 4
@@ -38,21 +41,22 @@ class Heuristic2(StudentHeuristic):
         return "count all"
 
     def evaluation_function(self, state: TwoPlayerGameState) -> float:
-        return count_all(state)
+        return count_both_pieces_possible_catches(state)
 
 
 class Heuristic3(StudentHeuristic):
 
     def get_name(self) -> str:
-        return "heuristic"
+        return "count pieces"
 
     def evaluation_function(self, state: TwoPlayerGameState) -> float:
-        return simple_evaluation_function(state)
+        return count_pieces(state)
 
 
 def create_match(player1: Player, player2: Player) -> TwoPlayerMatch:
 
-    initial_board = None#np.zeros((dim_board, dim_board))
+    initial_board = None
+    #np.zeros((dim_board, dim_board))
     initial_player = player1
 
     """game = TicTacToe(
@@ -96,18 +100,21 @@ def create_match(player1: Player, player2: Player) -> TwoPlayerMatch:
 
     return TwoPlayerMatch(game_state, max_seconds_per_move=1000, gui=False)
 
-
+simple_evaluation_function.counter = 0
+count_both_pieces_possible_catches.counter = 0
+count_pieces.counter = 0
+start = time.time()
 tour = Tournament(max_depth=3, init_match=create_match)
-strats = {'opt1': [Heuristic1], 'opt2': [Heuristic2], 'opt3': [Heuristic3]}
-
+#strats = {'opt1': [Heuristic1], 'opt2': [Heuristic1]}
+strats = {'opt1': [Heuristic3], 'opt2': [Heuristic3]}
 n = 1
 scores, totals, names = tour.run(
     student_strategies=strats,
     increasing_depth=False,
-    n_pairs=5,
+    n_pairs=1,
     allow_selfmatch=False,
 )
-
+elapsed = time.time() - start
 print(
     'Results for tournament where each game is repeated '
     + '%d=%dx2 times, alternating colors for each player' % (2 * n, n),
@@ -128,3 +135,8 @@ for name1 in names:
         else:
             print('\t%d' % (scores[name1][name2]), end='')
     print()
+
+print(f'Time needed to perform tournament with pruning: {elapsed}')
+#print(f'Number of simple function execution {simple_evaluation_function.counter}')
+#print(f'Number of simple function execution {count_both_pieces_possible_catches.counter}')
+print(f'Number of simple function execution {count_pieces.counter}')
